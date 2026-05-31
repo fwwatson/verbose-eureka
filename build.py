@@ -186,7 +186,7 @@ def render_body_inner(projects: list[dict], with_target_top: bool) -> str:
         )
 
     intro = (
-        f'<p class="intro">{len(projects)} projects from the Open Studio archive, '
+        f'<p class="intro">{len(projects)} projects from the Open Studio archive (Last updated: 2026-05-31), '
         f'grouped by year. Click any project to open the lesson in Thinkific.</p>'
     )
     return intro + "\n\n" + "\n\n".join(sections)
