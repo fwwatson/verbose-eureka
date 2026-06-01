@@ -323,11 +323,9 @@ def render_body_inner(projects: list[dict], images_dir: Path) -> str:
             f'</section>'
         )
 
-    intro = (
-        f'<p class="intro">{len(projects)} projects from the Open Studio archive, '
-        f'grouped by year. Click any project to open the lesson in Thinkific.</p>'
-    )
-    return intro + "\n\n" + "\n\n".join(sections)
+    # Intro paragraph intentionally removed 2026-05-31 — Francesca writes the
+    # opening paragraph at the Thinkific lesson level, above the iframe.
+    return "\n\n".join(sections)
 
 
 # Stylesheet. Image-anchored row pattern; placeholder uses brand-palette
@@ -337,7 +335,6 @@ STYLE_CSS = """
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
        max-width: 760px; margin: 0 auto; padding: 1.5em 1em;
        color: #2a2a2a; line-height: 1.5; }
-.intro { color: #555; margin-bottom: 1.5em; font-size: 0.95em; }
 .year { margin-bottom: 2em; }
 .year-heading { font-size: 1.3em; font-weight: 600; color: #1a1a1a;
                 border-bottom: 1px solid #ddd; padding-bottom: 0.3em;
@@ -350,7 +347,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: inherit; text-decoration: none;
 }
 .entry-image {
-  flex: 0 0 120px; width: 120px; height: 120px;
+  flex: 0 0 160px; width: 160px; height: 160px;
   border-radius: 4px; overflow: hidden; position: relative;
   background-color: #eee;
 }
@@ -360,7 +357,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   text-align: center; padding: 10px;
 }
 .placeholder-title {
-  color: #fff; font-weight: 600; font-size: 14px;
+  color: #fff; font-weight: 600; font-size: 15px;
   line-height: 1.25; word-break: break-word;
 }
 .placeholder-label {
@@ -388,8 +385,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   box-shadow: 0 0 0 2px #0a5d8c;
 }
 @media (max-width: 480px) {
-  .entry-image { flex: 0 0 72px; width: 72px; height: 72px; }
-  .placeholder-title { font-size: 11px; line-height: 1.2; }
+  .entry-image { flex: 0 0 96px; width: 96px; height: 96px; }
+  .placeholder-title { font-size: 12px; line-height: 1.2; }
   .placeholder-label { font-size: 8px; bottom: 3px; right: 4px; }
   .entry-title { font-size: 15px; }
   .entry-date-runtime, .entry-format, .entry-descriptor,
