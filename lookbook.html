@@ -124,6 +124,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         // Fallback for browsers without <dialog>: just show.
         dlg.setAttribute('open', '');
       }
+      setTimeout(postHeight, 60);
     });
   });
 
@@ -137,6 +138,30 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       dlg.close();
     }
   });
+  dlg.addEventListener('close', function () { setTimeout(postHeight, 60); });
+
+  // ===== Cross-origin height bridge (probe 5) =====
+  function postHeight() {
+    if (window.parent === window) return;
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    try {
+      window.parent.postMessage({type: 'lookbook:resize', height: h}, '*');
+    } catch (err) { /* parent gone; ignore */ }
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if (typeof ResizeObserver === 'function') {
+    try {
+      var ro = new ResizeObserver(postHeight);
+      ro.observe(document.body);
+    } catch (err) { /* older browser; ignore */ }
+  }
+  postHeight();
 })();
 </script>
 </body>
