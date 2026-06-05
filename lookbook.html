@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Open Studio Look-Book</title>
+  <style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+       margin: 0; padding: 1.5em 1em;
+       color: #2a2a2a; line-height: 1.5; background: transparent; }
+.lb-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 1023px) { .lb-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 479px)  { .lb-grid { grid-template-columns: 1fr; } }
+.lb-tile {
+  position: relative; padding: 0; margin: 0; border: 0;
+  background: #eee; cursor: pointer;
+  aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px;
+  min-width: 44px; min-height: 44px;
+}
+.lb-tile img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.3s ease;
+}
+.lb-tile:hover img, .lb-tile:focus-visible img { transform: scale(1.04); }
+.lb-tile-overlay {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 8px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0));
+  color: #fff; text-align: left;
+  display: flex; flex-direction: column; gap: 1px;
+  /* Always visible on touch; subtle on desktop until hover for cleaner browse */
+  opacity: 1;
+}
+@media (hover: hover) {
+  .lb-tile-overlay { opacity: 0; transition: opacity 0.2s ease; }
+  .lb-tile:hover .lb-tile-overlay,
+  .lb-tile:focus-visible .lb-tile-overlay { opacity: 1; }
+}
+.lb-tile-title { font-size: 14px; font-weight: 600; line-height: 1.25; }
+.lb-tile-year  { font-size: 12px; opacity: 0.9; }
+
+/* Lightbox */
+.lb-lightbox {
+  border: 0; padding: 0; max-width: 760px; width: calc(100% - 32px);
+  border-radius: 6px; background: #fff; color: #2a2a2a;
+}
+.lb-lightbox::backdrop { background: rgba(0,0,0,0.7); }
+.lb-lightbox-form { margin: 0; }
+.lb-lightbox-close {
+  position: absolute; top: 8px; right: 10px;
+  border: 0; background: transparent;
+  font-size: 28px; line-height: 1; cursor: pointer;
+  color: #fff; text-shadow: 0 0 4px rgba(0,0,0,0.7);
+  width: 44px; height: 44px; padding: 0;
+}
+.lb-lightbox-image {
+  width: 100%; height: auto; display: block; max-height: 70vh;
+  object-fit: contain; background: #000;
+}
+.lb-lightbox-text { padding: 16px 20px 20px; }
+.lb-lightbox-title { margin: 0 0 4px 0; font-size: 1.2em; font-weight: 600; color: #1a1a1a; }
+.lb-lightbox-date { margin: 0 0 8px 0; font-size: 13px; color: #666; }
+.lb-lightbox-descriptor { margin: 0 0 10px 0; font-size: 14px; color: #444; font-style: italic; }
+.lb-lightbox-descriptor:empty { display: none; }
+/* Members-tag link — brand deep teal #006472 (palette §5; Morgan v2.1
+   sign-off correction 2026-06-05). Quiet recognition cue, not a CTA. */
+.lb-lightbox-members { margin: 0; font-size: 13px; }
+.lb-lightbox-members a { color: #006472; text-decoration: none; }
+.lb-lightbox-members a:hover { text-decoration: underline; }
+@media (max-width: 767px) {
+  .lb-lightbox {
+    max-width: 100vw; width: 100vw; height: 100dvh;
+    margin: 0; border-radius: 0; max-height: 100dvh;
+    display: flex; flex-direction: column;
+  }
+  .lb-lightbox-image { max-height: 60vh; }
+}
+  </style>
+</head>
+<body>
+<div class="lb-grid"></div>
+<dialog id="lb-lightbox" class="lb-lightbox" aria-label="Project detail">
+  <form method="dialog" class="lb-lightbox-form">
+    <button class="lb-lightbox-close" aria-label="Close lightbox">&times;</button>
+  </form>
+  <img class="lb-lightbox-image" alt="">
+  <div class="lb-lightbox-text">
+    <h2 class="lb-lightbox-title"></h2>
+    <p class="lb-lightbox-date"></p>
+    <p class="lb-lightbox-descriptor"></p>
+    <p class="lb-lightbox-members"><a href="https://learning.makeryarts.com/bundles/open-studio-community" target="_top" rel="noopener">Members watch this lesson on learning.makeryarts.com</a></p>
+  </div>
+</dialog>
+<script>
+(function () {
+  var dlg = document.getElementById('lb-lightbox');
+  if (!dlg) return;
+  var img = dlg.querySelector('.lb-lightbox-image');
+  var titleEl = dlg.querySelector('.lb-lightbox-title');
+  var dateEl  = dlg.querySelector('.lb-lightbox-date');
+  var descEl  = dlg.querySelector('.lb-lightbox-descriptor');
+
+  document.querySelectorAll('.lb-tile').forEach(function (tile) {
+    tile.addEventListener('click', function () {
+      img.src = tile.dataset.image || '';
+      img.alt = tile.dataset.title || '';
+      titleEl.textContent = tile.dataset.title || '';
+      dateEl.textContent  = tile.dataset.date  || '';
+      descEl.textContent  = tile.dataset.descriptor || '';
+      if (typeof dlg.showModal === 'function') {
+        dlg.showModal();
+      } else {
+        // Fallback for browsers without <dialog>: just show.
+        dlg.setAttribute('open', '');
+      }
+    });
+  });
+
+  // Click backdrop (outside the form/image/text area) to dismiss.
+  dlg.addEventListener('click', function (e) {
+    var rect = dlg.getBoundingClientRect();
+    var inside =
+      e.clientX >= rect.left && e.clientX <= rect.right &&
+      e.clientY >= rect.top  && e.clientY <= rect.bottom;
+    if (!inside) {
+      dlg.close();
+    }
+  });
+})();
+</script>
+</body>
+</html>
