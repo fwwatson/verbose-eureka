@@ -343,7 +343,8 @@
           } else {
             seekAndPlay();
           }
-          document.querySelector(".player-sticky").scrollIntoView({ behavior: "smooth", block: "start" });
+          // No page scroll: the player is always in view (sticky-left on desktop, sticky-top on
+          // mobile), so a result click only seeks the nested player — zero page movement (Rex tweak 2026-06-19).
         }
 
         function reportPlayErr(r, e) {
@@ -525,7 +526,7 @@
           countEl.textContent = DATA.recs.length.toLocaleString() + " moments indexed across the library.";
           resultsEl.innerHTML =
             '<li class="hint">Start typing to search. Each result is a <b>moment</b> in a lesson — ' +
-            'click it to jump to that exact second in the player above, or open the full lesson for handouts and the complete index.</li>';
+            'click it to jump to that exact second in the player, or open the full lesson for handouts and the complete index.</li>';
         }
         function setNow(html) { npEl.innerHTML = html; }
         function fmt(sec) {
