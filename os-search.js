@@ -1,9 +1,8 @@
-/* ARC-007 Open Studio Search — embeddable app (Sam 2026-06-19, revert+SRI build).
-   Loaded with Subresource Integrity from the small Thinkific footer loader, which runs
-   ONLY on the gated search page and defines window.OS_SEARCH_CONFIG (page path, data URL,
-   feedback webhook + token + mailto). This file is config-free / public-safe: no webhook
-   URL or token is baked in — they arrive at runtime via the global the footer set.
-   The app body below is byte-for-byte the jsdom-validated inline app. */
+/* ARC-007 Open Studio Search — embeddable app (Sam, revert+SRI build; 2026-06-20 two-column layout).
+   Loaded with Subresource Integrity from the small Thinkific footer loader, which runs ONLY on the
+   gated search page and defines window.OS_SEARCH_CONFIG. Config-free / public-safe: no webhook or
+   token baked in. App body = the jsdom-validated build; 2026-06-20 added a two-column desktop layout
+   (player left / results right) with the results list as its own scroll region so the video stays put. */
 (function () {
   "use strict";
   try {
@@ -81,7 +80,12 @@
           "#os-search-root .fb-btn[disabled]{opacity:.55;cursor:default;}",
           "#os-search-root .fb-status{font-size:.82rem;margin-top:10px;min-height:1.1em;}",
           "#os-search-root .fb-status.ok{color:var(--brand-teal);}",
-          "#os-search-root .fb-status.warn{color:#8a1f1f;}"
+          "#os-search-root .fb-status.warn{color:#8a1f1f;}",
+          "#os-search-root .os-main{display:grid;grid-template-columns:1fr;gap:18px;}",
+          "#os-search-root .col-right{display:flex;flex-direction:column;min-width:0;}",
+          "#os-search-root .results{overflow-y:auto;-webkit-overflow-scrolling:touch;max-height:62vh;overscroll-behavior:contain;}",
+          "@media(min-width:880px){#os-search-root .wrap{max-width:1080px;}#os-search-root .os-main{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:start;}#os-search-root .col-left{position:sticky;top:12px;}#os-search-root .results{max-height:calc(100vh - 160px);}}",
+          "@media(max-width:879px){#os-search-root .player-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding-bottom:6px;}}"
         ].join("\n");
         document.head.appendChild(st);
 
@@ -90,7 +94,9 @@
           '<div class="wrap">' +
             '<h1>Open Studio — search the library</h1>' +
             '<p class="sub">Search every project and Office Hours session by technique, tool, stone, or moment — then jump straight to that second.</p>' +
-            '<div class="player-sticky">' +
+            '<div class="os-main">' +
+              '<div class="col-left">' +
+              '<div class="player-sticky">' +
               '<div class="player-shell">' +
                 '<iframe id="os-vimeo" ' +
                   'src="https://player.vimeo.com/video/1076987319?title=0&byline=0&portrait=0&dnt=1" ' +
@@ -103,12 +109,16 @@
                 '<button type="button" class="im-btn" id="os-indexMoment" title="Suggest this moment be added to the search index">+ Index this moment</button>' +
               '</div>' +
             '</div>' +
+            '</div>' +
+            '<div class="col-right">' +
             '<div class="search-row">' +
               '<input id="os-q" type="search" placeholder="Try “bezel setting”, “annealing”, “patina”, “riveting”…" ' +
                 'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search the Open Studio library">' +
             '</div>' +
             '<p class="count" id="os-count" aria-live="polite"></p>' +
             '<ul class="results" id="os-results"></ul>' +
+            '</div>' +
+            '</div>' +
             // shared feedback modal
             '<div class="fb-overlay" id="os-fb-overlay" role="dialog" aria-modal="true" aria-labelledby="os-fb-title">' +
               '<div class="fb-modal">' +
