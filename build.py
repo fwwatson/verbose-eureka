@@ -333,8 +333,9 @@ def render_body_inner(projects: list[dict], images_dir: Path) -> str:
 # Mobile (<=480px) keeps image-left but shrinks square to 72px.
 STYLE_CSS = """
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-       max-width: 760px; margin: 0 auto; padding: 1.5em 1em;
+       max-width: none; margin: 0; padding: 1.25em clamp(12px,3vw,44px); box-sizing: border-box;
        color: #2a2a2a; line-height: 1.5; }
+*, *::before, *::after { box-sizing: border-box; }
 .year { margin-bottom: 2em; }
 .year-heading { font-size: 1.3em; font-weight: 600; color: #1a1a1a;
                 border-bottom: 1px solid #ddd; padding-bottom: 0.3em;
@@ -347,8 +348,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: inherit; text-decoration: none;
 }
 .entry-image {
-  flex: 0 0 160px; width: 160px; height: 160px;
-  border-radius: 4px; overflow: hidden; position: relative;
+  flex: 0 0 320px; width: 320px; height: 180px; aspect-ratio: 16 / 9;
+  border-radius: 6px; overflow: hidden; position: relative;
   background-color: #eee;
 }
 .entry-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -357,7 +358,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   text-align: center; padding: 10px;
 }
 .placeholder-title {
-  color: #fff; font-weight: 600; font-size: 15px;
+  color: #fff; font-weight: 600; font-size: 17px;
   line-height: 1.25; word-break: break-word;
 }
 .placeholder-label {
@@ -384,8 +385,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 .entry-row-link:hover .entry-image {
   box-shadow: 0 0 0 2px #0a5d8c;
 }
-@media (max-width: 480px) {
-  .entry-image { flex: 0 0 96px; width: 96px; height: 96px; }
+@media (max-width: 600px) {
+  .entry-image { flex: 0 0 160px; width: 160px; height: 90px; }
   .placeholder-title { font-size: 12px; line-height: 1.2; }
   .placeholder-label { font-size: 8px; bottom: 3px; right: 4px; }
   .entry-title { font-size: 15px; }
