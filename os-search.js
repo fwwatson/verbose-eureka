@@ -306,13 +306,12 @@
           li.className = "result";
           li.tabIndex = 0;
           var hasSnip = !!r.snippet;
-          var badge = DATA.sectionLabels[r.sec] || "";
           var lessonUrl = safeLessonUrl(DATA.lessons[r.vid]);
           li.innerHTML =
             '<div class="r-top">' +
               '<div class="r-meta">' +
                 '<div class="r-project">' + esc(r.project) + ' <span class="yr">· ' + r.year + '</span>' +
-                  (badge ? '<span class="r-badge">' + esc(badge) + '</span>' : '') + '</div>' +
+                  '</div>' +
                 '<div class="r-title">' + hi(r.title, tokens) + '</div>' +
               '</div>' +
               '<div class="r-time">' + fmt(r.ts) + '</div>' +
