@@ -28,9 +28,10 @@ the script picks the first alphabetically and warns.
 
 ### Image guidance
 
-- Target ~600–800 px wide, square aspect ratio (Canva cards may be other
-  ratios — center-cropped by default; re-export if a composition would be
-  lost to crop).
+- Target **16:9 landscape** (e.g. 1280×720; min ~640×360). The card slots
+  are 320×180 (16:9), so 16:9 promo cards drop in with no cropping. Other
+  ratios are center-cropped to fill the 16:9 box — re-export if a composition
+  would be lost to crop.
 - JPEG quality 85 is the default. PNG only if a specific card needs text
   crispness that JPEG can't hold.
 - **Hard size limit: 250 KB per image.** Builds fail with a clear error
