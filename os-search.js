@@ -26,14 +26,23 @@
         // ---------- styles ----------
         var st = document.createElement("style");
         st.textContent = [
-          "#os-search-root{--brand-teal:#006472;--ink:#1d1d1d;--muted:#5f6b6d;--line:#d9e0e1;--bg:#fff;--hit:#eef6f7;--mark:#ffe9a8;}",
+          "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Oswald:wght@500;600&display=swap');",
+          "#os-search-root{--brand-teal:#006472;--navy:#273e69;--teal-top:#36b6c0;--teal-lite:#229aa4;--wood1:#b9824b;--wood2:#996a39;--ink:#1d1d1d;--muted:#5f6b6d;--line:#d9e0e1;--bg:#fff;--hit:#eef6f7;--mark:#ffe9a8;}",
           "#os-search-root *{box-sizing:border-box;}",
-          "#os-search-root .wrap{max-width:920px;margin:0 auto;padding:18px 16px 56px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.45;}",
-          "#os-search-root h1{font-size:1.2rem;margin:0 0 3px;}",
-          "#os-search-root .sub{color:var(--muted);font-size:.85rem;margin:0 0 16px;}",
+          "#os-search-root .wrap{max-width:920px;margin:0 auto;padding:18px 16px 56px;font-family:Georgia,'Times New Roman',serif;color:var(--ink);line-height:1.45;}",
+          "#os-search-root .os-banner{margin:6px 0 4px;border-radius:10px;overflow:hidden;}",
+          "#os-search-root .os-banner .bf-inner{background:linear-gradient(135deg,var(--teal-top),var(--teal-lite));padding:26px 26px 22px;}",
+          "#os-search-root .os-banner .bf-eyebrow{font-family:Oswald,'Arial Narrow',sans-serif;letter-spacing:.18em;font-size:13px;color:#0d3b40;font-weight:600;}",
+          "#os-search-root .os-banner .bf-lockup{font-family:Oswald,'Arial Narrow',sans-serif;font-weight:600;font-size:34px;line-height:1.02;letter-spacing:.02em;margin-top:8px;color:transparent;-webkit-text-stroke:1.5px #1d4f55;}",
+          "#os-search-root .os-banner .bf-wood{height:15px;background:linear-gradient(90deg,var(--wood1),var(--wood2));}",
+          "#os-search-root h1{font-family:'Playfair Display',Georgia,serif;font-weight:700;color:var(--navy);font-size:1.9rem;margin:14px 0 3px;}",
+          "#os-search-root .sub{color:var(--muted);font-size:.92rem;margin:0 0 16px;}",
           "#os-search-root .player-sticky{position:sticky;top:0;z-index:5;background:var(--bg);padding-top:6px;}",
-          "#os-search-root .player-shell{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;}",
+          "#os-search-root .player-shell{position:relative;width:100%;aspect-ratio:16/9;background:var(--hit);border:1px solid var(--line);border-radius:8px;overflow:hidden;}",
           "#os-search-root .player-shell iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}",
+          "#os-search-root .ph-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;color:var(--muted);background:var(--hit);z-index:2;}",
+          "#os-search-root .ph-empty .ph-ico{width:46px;height:46px;border-radius:50%;border:2px solid var(--brand-teal);color:var(--brand-teal);display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:3px;}",
+          "#os-search-root .ph-empty .ph-cap{font-size:.92rem;max-width:250px;}",
           "#os-search-root .player-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 2px 12px;flex-wrap:wrap;}",
           "#os-search-root .now-playing{font-size:.8rem;color:var(--muted);min-height:1.1em;font-variant-numeric:tabular-nums;}",
           "#os-search-root .now-playing b{color:var(--ink);font-weight:600;}",
@@ -48,10 +57,10 @@
           "#os-search-root li.result:hover,#os-search-root li.result:focus-within{background:var(--hit);border-color:var(--brand-teal);}",
           "#os-search-root .r-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}",
           "#os-search-root .r-meta{min-width:0;}",
-          "#os-search-root .r-project{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}",
+          "#os-search-root .r-project{font-family:Oswald,'Arial Narrow',sans-serif;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}",
           "#os-search-root .r-project .yr{color:var(--brand-teal);}",
           "#os-search-root .r-badge{display:inline-block;font-size:.64rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px;}",
-          "#os-search-root .r-title{font-weight:600;margin-top:1px;}",
+          "#os-search-root .r-title{font-family:'Playfair Display',Georgia,serif;color:var(--navy);font-weight:600;font-size:1.02rem;margin-top:1px;}",
           "#os-search-root .r-time{flex:0 0 auto;font-variant-numeric:tabular-nums;color:var(--brand-teal);font-weight:600;font-size:.9rem;}",
           "#os-search-root .r-snippet{color:var(--ink);font-size:.92rem;margin-top:4px;}",
           "#os-search-root .r-snippet.empty-snip{color:var(--muted);font-style:italic;}",
@@ -92,7 +101,8 @@
         // ---------- DOM ----------
         root.innerHTML =
           '<div class="wrap">' +
-            '<h1>Open Studio — search the library</h1>' +
+            '<div class="os-banner"><div class="bf-inner"><div class="bf-eyebrow">SEARCH THE LIBRARY</div><div class="bf-lockup">OPEN STUDIO<br>COMMUNITY</div></div><div class="bf-wood"></div></div>' +
+            '<h1>Search the Library</h1>' +
             '<p class="sub">Search every project and Office Hours session by technique, tool, stone, or moment — then jump straight to that second.</p>' +
             '<div class="os-main">' +
               '<div class="col-left">' +
@@ -103,6 +113,7 @@
                   'allow="autoplay; fullscreen; picture-in-picture" ' +
                   'referrerpolicy="strict-origin-when-cross-origin" ' +
                   'title="Open Studio video player"></iframe>' +
+                '<div class="ph-empty" id="os-ph"><div class="ph-ico">&#9654;</div><div class="ph-cap">Search and click a result to play that moment here.</div></div>' +
               '</div>' +
               '<div class="player-bar">' +
                 '<div class="now-playing" id="os-nowPlaying"></div>' +
@@ -329,6 +340,7 @@
         // ---------- nested player jump (freeze-safe discrete seek) ----------
         function jumpTo(r) {
           currentRec = r;
+          var phEl = document.getElementById("os-ph"); if (phEl) { phEl.style.display = "none"; }
           setNow("Loading " + r.project + " — " + r.title + " @ " + fmt(r.ts) + "…");
           var seekAndPlay = function () {
             return player.setCurrentTime(r.ts)
