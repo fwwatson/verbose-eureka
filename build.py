@@ -305,16 +305,26 @@ def render_entry(p: dict, images_dir: Path) -> str:
 
 
 def render_body_inner(projects: list[dict], images_dir: Path) -> str:
+    # Reverse-chronological: most recent first (Francesca 2026-06-24).
+    # Years descending; months descending within a year; num breaks ties.
+    # Entries with an uncertain/unknown month sort to the BOTTOM of their year
+    # (we can't claim they're recent) — reverse=True flips the whole key, so
+    # uncertain months map to -1 to stay last under the flip.
+    def _month_key(p: dict):
+        m = MONTH_ORDER.get(p["month"], 99)
+        return -1 if m == 99 else m
+
     sorted_projects = sorted(
         projects,
-        key=lambda p: (int(p["year"]), MONTH_ORDER.get(p["month"], 99), p["num"]),
+        key=lambda p: (int(p["year"]), _month_key(p), p["num"]),
+        reverse=True,
     )
     by_year: dict[str, list[dict]] = {}
     for p in sorted_projects:
         by_year.setdefault(p["year"], []).append(p)
 
     sections = []
-    for year in sorted(by_year.keys(), key=int):
+    for year in by_year:  # insertion order = years descending (newest first)
         items = "\n".join(render_entry(p, images_dir) for p in by_year[year])
         sections.append(
             f'<section class="year">\n'
