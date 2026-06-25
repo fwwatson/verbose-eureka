@@ -332,7 +332,7 @@ def render_body_inner(projects: list[dict], images_dir: Path) -> str:
 # block with prominent white title and small bottom-right "Card coming" label.
 # Mobile (<=480px) keeps image-left but shrinks square to 72px.
 STYLE_CSS = """
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+body { font-family: Georgia, 'Times New Roman', serif;
        max-width: none; margin: 0; padding: 1.25em clamp(12px,3vw,44px); box-sizing: border-box;
        color: #2a2a2a; line-height: 1.5; }
 *, *::before, *::after { box-sizing: border-box; }
@@ -394,6 +394,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   .entry-led-by, .entry-multipart-links { font-size: 12px; }
   .entry-row-link, .entry-inner { gap: 12px; }
 }
+
+/* Refined Classic font roles (Sam 2026-06-24) */
+.year-heading, .entry-title, .placeholder-title { font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; }
+.entry-date-runtime, .entry-format, .entry-led-by, .entry-multipart-links, .placeholder-label { font-family: 'Trebuchet MS', Verdana, Geneva, sans-serif; }
 """.strip()
 
 
