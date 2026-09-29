@@ -15,10 +15,10 @@ Renders 58 project entries as image-anchored rows (square image left + text
 right; no bordered card). Year-grouped, calendar-ordered within year, no
 filter/search/sort/tag-grouping anywhere in the served HTML (methodology gate).
 
-YEAR TABS (2026-09-29, Francesca): one year per tab, 2021-2023 combined, so
-the page height stays constant and the fixed iframe height in lesson 75598614
-does not change month to month. The build prints a WARNING if any tab exceeds
-FRAME_FITS_PROJECTS (18) -- only then re-measure the height.
+YEAR TABS (2026-09-29, Francesca): one year per tab (older short years paired,
+max 12 projects per tab) so the page height stays ~2,700 px and the fixed iframe
+height in lesson 75598614 does not change month to month. The build prints a
+WARNING if any tab exceeds 12 projects -- only then re-measure the height.
 Without JavaScript every year still shows as one long list.
 
 # Image discovery
@@ -312,32 +312,35 @@ def render_entry(p: dict, images_dir: Path) -> str:
 
 
 # --- Year tabs (Francesca 2026-09-29) ------------------------------------
-# One tab per year, except the years Francesca chose to combine (COMBINED).
-# The lesson 75598614 iframe height is fixed, sized to the tallest tab, which
-# holds FRAME_FITS_PROJECTS projects. If any tab ever holds more, the build
-# warns and the lesson height must be re-measured and raised.
-COMBINED = [("2023", "2022", "2021")]   # Francesca 2026-09-29: "combine 2021 - 2023"
-FRAME_FITS_PROJECTS = 18
+# One year per tab so the page height stays roughly constant and the fixed
+# iframe height in Thinkific lesson 75598614 never has to change monthly.
+# A tab holds at most MAX_PER_TAB projects (a full year of monthly projects).
+# The newest year always stands alone (it is still filling). Older years are
+# paired newest-first while the pair stays within MAX_PER_TAB
+# (today: 2022+2023 = 12 -> one "2022–2023" tab; 2021 alone).
+MAX_PER_TAB = 12
 
 
 def group_year_tabs(by_year: dict) -> list:
     years = list(by_year)  # newest first
-    combined_of = {y: g for g in COMBINED for y in g}
-    tabs, done = [], set()
-    for y in years:
-        if y in done:
-            continue
-        g = [x for x in combined_of.get(y, (y,)) if x in by_year]
-        done.update(g)
-        if len(g) == 1:
-            tabs.append((g[0], g[0], g))
+    tabs = []
+    i = 0
+    while i < len(years):
+        group = [years[i]]
+        if i > 0:  # never merge the current (newest) year
+            while (i + len(group) < len(years)
+                   and sum(len(by_year[y]) for y in group) + len(by_year[years[i + len(group)]]) <= MAX_PER_TAB):
+                group.append(years[i + len(group)])
+        if len(group) == 1:
+            tabs.append((group[0], group[0], group))
         else:
-            tabs.append((f"{g[-1]}-{g[0]}", f"{g[-1]}\u2013{g[0]}", g))
+            tabs.append((f"{group[-1]}-{group[0]}", f"{group[-1]}\u2013{group[0]}", group))
+        i += len(group)
     over = [(t[1], sum(len(by_year[y]) for y in t[2])) for t in tabs
-            if sum(len(by_year[y]) for y in t[2]) > FRAME_FITS_PROJECTS]
+            if sum(len(by_year[y]) for y in t[2]) > MAX_PER_TAB]
     if over:
-        print("WARNING — TAB OVER " + str(FRAME_FITS_PROJECTS) + " PROJECTS, the Thinkific lesson 75598614 "
-              f"iframe height must be re-measured and raised: {over}", file=sys.stderr)
+        print("WARNING — TAB OVER 12 PROJECTS, the Thinkific lesson 75598614 iframe "
+              f"height must be re-measured and raised: {over}", file=sys.stderr)
     return tabs
 
 
