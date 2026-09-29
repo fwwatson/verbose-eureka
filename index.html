@@ -72,11 +72,37 @@ body { font-family: Georgia, 'Times New Roman', serif;
 /* Refined Classic font roles (Sam 2026-06-24) */
 .year-heading, .entry-title, .placeholder-title { font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; }
 .entry-date-runtime, .entry-format, .entry-led-by, .entry-multipart-links, .placeholder-label { font-family: 'Trebuchet MS', Verdana, Geneva, sans-serif; }
+
+/* Year tabs (2026-09-29) */
+.year { margin-bottom: 0; }
+.ytabs { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid #ddd; margin-bottom: 8px; }
+.ytab { font: inherit; display: grid; justify-items: center; gap: 1px; min-width: 76px; min-height: 48px; padding: 6px 12px; border: 1px solid #d6dcdc; border-radius: 6px; background: #fff; color: #1a1a1a; cursor: pointer; }
+.ytab-year { font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; font-size: 18px; font-weight: 600; line-height: 1.2; }
+.ytab-count { font-family: 'Trebuchet MS', Verdana, Geneva, sans-serif; font-size: 11px; color: #666; }
+.ytab:hover { border-color: #0a5d8c; }
+.ytab[aria-selected="true"] { background: #273e69; border-color: #273e69; color: #fff; }
+.ytab[aria-selected="true"] .ytab-count { color: #d7deea; }
+.ytab:focus-visible, .ynav-btn:focus-visible { outline: 2px solid #f26a36; outline-offset: 2px; }
+.entry.sub-year { padding: 14px 0 2px; border-bottom: none; }
+.entries .entry.sub-year:first-child { padding-top: 4px; }
+.sub-year-heading { margin: 0; font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; font-size: 16px; font-weight: 600; color: #555; letter-spacing: 0.02em; }
+.ynav { display: flex; justify-content: space-between; gap: 8px; padding-top: 14px; margin-top: 4px; border-top: 1px solid #f0f0f0; }
+.ynav-btn { font: 14px 'Trebuchet MS', Verdana, Geneva, sans-serif; min-height: 44px; padding: 8px 14px; border: 1px solid #d6dcdc; border-radius: 6px; background: #fff; color: #0a5d8c; cursor: pointer; }
+.ynav-btn:hover { border-color: #0a5d8c; }
+.js .nojs-only { display: none; }
+html:not(.js) .ynav { display: none; }
+[hidden] { display: none !important; }
+@media (max-width: 600px) {
+  .ytabs { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .ytab { min-width: 0; padding: 6px 4px; }
+}
   </style>
 </head>
 <body>
-<section class="year">
-  <h2 class="year-heading">2026</h2>
+<div class="ytabs" role="tablist" aria-label="Year" hidden><button type="button" role="tab" id="tab-2026" class="ytab" aria-selected="true" aria-controls="panel-2026" tabindex="0"><span class="ytab-year">2026</span><span class="ytab-count">9 projects</span></button><button type="button" role="tab" id="tab-2025" class="ytab" aria-selected="false" aria-controls="panel-2025" tabindex="-1"><span class="ytab-year">2025</span><span class="ytab-count">12 projects</span></button><button type="button" role="tab" id="tab-2024" class="ytab" aria-selected="false" aria-controls="panel-2024" tabindex="-1"><span class="ytab-year">2024</span><span class="ytab-count">12 projects</span></button><button type="button" role="tab" id="tab-2022-2023" class="ytab" aria-selected="false" aria-controls="panel-2022-2023" tabindex="-1"><span class="ytab-year">2022–2023</span><span class="ytab-count">12 projects</span></button><button type="button" role="tab" id="tab-2021" class="ytab" aria-selected="false" aria-controls="panel-2021" tabindex="-1"><span class="ytab-year">2021</span><span class="ytab-count">6 projects</span></button><button type="button" role="tab" id="tab-2020" class="ytab" aria-selected="false" aria-controls="panel-2020" tabindex="-1"><span class="ytab-year">2020</span><span class="ytab-count">12 projects</span></button></div>
+
+<section class="year" role="tabpanel" id="panel-2026" aria-labelledby="tab-2026">
+  <h2 class="year-heading nojs-only">2026</h2>
   <ul class="entries">
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-project-library-2026/texts/78545578-video-september-project-the-enhancer" target="_top" rel="noopener"><div class="entry-image"><img src="images/161-the-enhancer.jpg" alt="VIDEO: September Project - The Enhancer" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: September Project - The Enhancer</span><span class="entry-date-runtime">September 2026 · 4:05:04</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-project-library-2026/texts/77649426-video-project-the-tab-set-brooch" target="_top" rel="noopener"><div class="entry-image"><img src="images/159-tab-set-brooch.jpg" alt="VIDEO: Project - The Tab-set Brooch" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: Project - The Tab-set Brooch</span><span class="entry-date-runtime">August 2026 · 3:47:30</span></div></a></li>
@@ -88,10 +114,11 @@ body { font-family: Georgia, 'Times New Roman', serif;
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-project-library-2026/texts/73020748-video-february-project-off-the-rails" target="_top" rel="noopener"><div class="entry-image"><img src="images/130-off-the-rails.jpg" alt="VIDEO: February Project - Off the Rails!" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: February Project - Off the Rails!</span><span class="entry-date-runtime">February 2026 · 4:53:09</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-project-library-2026/texts/72378751-video-project-rose-cuts-two-ways" target="_top" rel="noopener"><div class="entry-image"><img src="images/125-rosecuts-two-ways.jpg" alt="VIDEO: Project - Rose Cuts Two Ways" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: Project - Rose Cuts Two Ways</span><span class="entry-date-runtime">January 2026 · 5:03:26</span></div></a></li>
   </ul>
+  <nav class="ynav" aria-label="Other years"><span></span><button type="button" class="ynav-btn" data-go="2025">Older: 2025 &rarr;</button></nav>
 </section>
 
-<section class="year">
-  <h2 class="year-heading">2025</h2>
+<section class="year" role="tabpanel" id="panel-2025" aria-labelledby="tab-2025">
+  <h2 class="year-heading nojs-only">2025</h2>
   <ul class="entries">
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2025/texts/71318388-video-december-project" target="_top" rel="noopener"><div class="entry-image"><img src="images/116-last-minute-gift-ideas.jpg" alt="VIDEO: Last Minute Gift Ideas" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: Last Minute Gift Ideas</span><span class="entry-date-runtime">December 2025 · 2:47:16</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2025/texts/70817209-video-november-project-the-western-edge" target="_top" rel="noopener"><div class="entry-image"><img src="images/113-the-western-edge.jpg" alt="VIDEO: November Project - The Western Edge" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: November Project - The Western Edge</span><span class="entry-date-runtime">November 2025 · 4:21:24</span></div></a></li>
@@ -106,10 +133,11 @@ body { font-family: Georgia, 'Times New Roman', serif;
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2025/texts/62004970-video-january-project-the-heavy-walled-bezel" target="_top" rel="noopener"><div class="entry-image"><img src="images/083-the-heavy-walled-bezel.jpg" alt="VIDEO: January Project - The Heavy Walled Bezel" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: January Project - The Heavy Walled Bezel</span><span class="entry-date-runtime">January 2025 · 3:08:26</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2025/texts/65235100-video-bonus-project-with-sylvie-alusitz" target="_top" rel="noopener"><div class="entry-image"><img src="images/119-ornamental-clusters-with-sylvie.jpg" alt="VIDEO: Bonus project with Sylvie Alusitz" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: Bonus project with Sylvie Alusitz</span><span class="entry-date-runtime">2025 · 3:56:21</span><span class="entry-led-by">with Sylvie Alusitz</span></div></a></li>
   </ul>
+  <nav class="ynav" aria-label="Other years"><button type="button" class="ynav-btn" data-go="2026">&larr; Newer: 2026</button><button type="button" class="ynav-btn" data-go="2024">Older: 2024 &rarr;</button></nav>
 </section>
 
-<section class="year">
-  <h2 class="year-heading">2024</h2>
+<section class="year" role="tabpanel" id="panel-2024" aria-labelledby="tab-2024">
+  <h2 class="year-heading nojs-only">2024</h2>
   <ul class="entries">
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-2024/texts/75581303-video-the-convertible-brooch" target="_top" rel="noopener"><div class="entry-image"><img src="images/072-the-convertible-brooch.jpg" alt="VIDEO: The Convertible Brooch" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: The Convertible Brooch</span><span class="entry-date-runtime">November 2024 · 4:15:22</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-2024/texts/75581207-video-layered-keum-boo-earrings" target="_top" rel="noopener"><div class="entry-image"><img src="images/069-layered-keum-boo-earrings.jpg" alt="VIDEO: Layered Keum Boo Earrings" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: Layered Keum Boo Earrings</span><span class="entry-date-runtime">October 2024 · 5:00:40</span></div></a></li>
@@ -124,23 +152,20 @@ body { font-family: Georgia, 'Times New Roman', serif;
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-2024/texts/75580999-video-the-river-rock-necklace-broadcast-recording" target="_top" rel="noopener"><div class="entry-image"><img src="images/043-river-rock-necklace.jpg" alt="VIDEO: The River Rock Necklace - Broadcast Recording" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: The River Rock Necklace - Broadcast Recording</span><span class="entry-date-runtime">February 2024 · 4:58:27</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/open-studio-2024/texts/75580963-video-frame-and-prongs-broadcast-recording" target="_top" rel="noopener"><div class="entry-image"><img src="images/040-frame-and-prongs.jpg" alt="VIDEO: Frame and Prongs - Broadcast Recording" loading="lazy"></div><div class="entry-text"><span class="entry-title">VIDEO: Frame and Prongs - Broadcast Recording</span><span class="entry-date-runtime">January 2024 · 3:31:37</span></div></a></li>
   </ul>
+  <nav class="ynav" aria-label="Other years"><button type="button" class="ynav-btn" data-go="2025">&larr; Newer: 2025</button><button type="button" class="ynav-btn" data-go="2022-2023">Older: 2022–2023 &rarr;</button></nav>
 </section>
 
-<section class="year">
-  <h2 class="year-heading">2023</h2>
+<section class="year" role="tabpanel" id="panel-2022-2023" aria-labelledby="tab-2022-2023">
+  <h2 class="year-heading nojs-only">2022–2023</h2>
   <ul class="entries">
+<li class="entry sub-year"><h3 class="sub-year-heading">2023</h3></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489222-designing-hope" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">Designing Hope</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Designing Hope</span><span class="entry-date-runtime">December 2023 · 3:16:27</span><span class="entry-format">2 parts</span><span class="entry-descriptor">educational / technique emphasis</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489285-handmade-chain" target="_top" rel="noopener"><div class="entry-image"><img src="images/029-handmade-chain.jpg" alt="Handmade Chain" loading="lazy"></div><div class="entry-text"><span class="entry-title">Handmade Chain</span><span class="entry-date-runtime">September 2023 · 3:08:10</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489231-pearl-knotting-with-kate-richbourg" target="_top" rel="noopener"><div class="entry-image"><img src="images/028-pearl-knotting-with-kate.jpg" alt="Pearl Knotting with Kate Richbourg" loading="lazy"></div><div class="entry-text"><span class="entry-title">Pearl Knotting with Kate Richbourg</span><span class="entry-date-runtime">August 2023 · 4:03:27</span><span class="entry-led-by">with Kate Richbourg</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489210-the-framed-pendant" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">The Framed Pendant</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">The Framed Pendant</span><span class="entry-date-runtime">June 2023 · 4:36:03</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489204-partial-bezel-pendant" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Partial Bezel Pendant</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Partial Bezel Pendant</span><span class="entry-date-runtime">February 2023 · 3:58:45</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489198-the-framed-ring" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">The Framed Ring</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">The Framed Ring</span><span class="entry-date-runtime">January 2023 · 4:24:03</span></div></a></li>
-  </ul>
-</section>
-
-<section class="year">
-  <h2 class="year-heading">2022</h2>
-  <ul class="entries">
+<li class="entry sub-year"><h3 class="sub-year-heading">2022</h3></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489188-scrappy-necklace" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Scrappy Necklace</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Scrappy Necklace</span><span class="entry-date-runtime">October 2022 · 3:13:10</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489181-the-gazing-bowl-ring" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">The Gazing Bowl Ring</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">The Gazing Bowl Ring</span><span class="entry-date-runtime">September 2022 · 3:14:30</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489105-pennanular-brooch" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Pennanular Brooch</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Pennanular Brooch</span><span class="entry-date-runtime">July 2022 · 4:08:08</span></div></a></li>
@@ -148,10 +173,11 @@ body { font-family: Georgia, 'Times New Roman', serif;
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489111-simple-pendant-revisited" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Simple Pendant Revisited</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Simple Pendant Revisited</span><span class="entry-date-runtime">2022 · 4:14:05</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489092-torch-fired-enamels" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">Torch Fired Enamels</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Torch Fired Enamels</span><span class="entry-date-runtime">2022 · 3:09:24</span><span class="entry-descriptor">both (finished piece + technique-heavy)</span></div></a></li>
   </ul>
+  <nav class="ynav" aria-label="Other years"><button type="button" class="ynav-btn" data-go="2024">&larr; Newer: 2024</button><button type="button" class="ynav-btn" data-go="2021">Older: 2021 &rarr;</button></nav>
 </section>
 
-<section class="year">
-  <h2 class="year-heading">2021</h2>
+<section class="year" role="tabpanel" id="panel-2021" aria-labelledby="tab-2021">
+  <h2 class="year-heading nojs-only">2021</h2>
   <ul class="entries">
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489087-two-stone-ring" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Two Stone Ring</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Two Stone Ring</span><span class="entry-date-runtime">2021 · 7:28:48</span><span class="entry-format">8 parts</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61488963-scrappy-cuff" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">Scrappy Cuff</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Scrappy Cuff</span><span class="entry-date-runtime">2021 · 3:36:57</span><span class="entry-format">5 parts</span></div></a></li>
@@ -160,10 +186,11 @@ body { font-family: Georgia, 'Times New Roman', serif;
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489074-lentil-beads" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Lentil Beads</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Lentil Beads</span><span class="entry-date-runtime">2021 · 3:03:45</span><span class="entry-format">4 parts</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61489052-the-boho-bolo" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">The Boho Bolo</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">The Boho Bolo</span><span class="entry-date-runtime">2021 · 8:19:40</span><span class="entry-format">9 parts</span></div></a></li>
   </ul>
+  <nav class="ynav" aria-label="Other years"><button type="button" class="ynav-btn" data-go="2022-2023">&larr; Newer: 2022–2023</button><button type="button" class="ynav-btn" data-go="2020">Older: 2020 &rarr;</button></nav>
 </section>
 
-<section class="year">
-  <h2 class="year-heading">2020</h2>
+<section class="year" role="tabpanel" id="panel-2020" aria-labelledby="tab-2020">
+  <h2 class="year-heading nojs-only">2020</h2>
   <ul class="entries">
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61487964-stone-on-stone-pendant" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Stone on Stone Pendant</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Stone on Stone Pendant</span><span class="entry-date-runtime">2020 · 8:24:03</span><span class="entry-format">6 parts</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61488481-the-spinner-ring" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">The Spinner Ring</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">The Spinner Ring</span><span class="entry-date-runtime">2020 · 2:37:10</span><span class="entry-format">3 parts</span></div></a></li>
@@ -178,6 +205,43 @@ body { font-family: Georgia, 'Times New Roman', serif;
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61488573-broken-symmetry" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#006472;"><span class="placeholder-title">Broken Symmetry</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">Broken Symmetry</span><span class="entry-date-runtime">2020 · 8:15:12</span><span class="entry-format">11 parts</span></div></a></li>
 <li class="entry entry-single"><a class="entry-row-link" href="https://learning.makeryarts.com/courses/take/openstudio2020-2023/texts/61487945-the-big-ass-ring" target="_top" rel="noopener"><div class="entry-image entry-image-placeholder" style="background-color:#273e69;"><span class="placeholder-title">The Big Ass Ring</span><span class="placeholder-label">Card coming</span></div><div class="entry-text"><span class="entry-title">The Big Ass Ring</span><span class="entry-date-runtime">2020 · 7:44:10</span><span class="entry-format">6 parts</span></div></a></li>
   </ul>
+  <nav class="ynav" aria-label="Other years"><button type="button" class="ynav-btn" data-go="2021">&larr; Newer: 2021</button><span></span></nav>
 </section>
+<script>
+(function () {
+  document.documentElement.className += ' js';
+  var list = document.querySelector('.ytabs');
+  if (!list) return;
+  var tabs = Array.prototype.slice.call(list.querySelectorAll('.ytab'));
+  function select(key, focus) {
+    tabs.forEach(function (t) {
+      var on = t.id === 'tab-' + key;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) t.focus();
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t.id.slice(4)); });
+    t.addEventListener('keydown', function (e) {
+      var j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (e.key === 'Home') j = 0;
+      if (e.key === 'End') j = tabs.length - 1;
+      if (j !== null) { e.preventDefault(); select(tabs[j].id.slice(4), true); }
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.ynav-btn'), function (b) {
+    b.addEventListener('click', function () {
+      select(b.getAttribute('data-go'), true);
+      try { list.scrollIntoView({ block: 'start' }); } catch (e) { list.scrollIntoView(); }
+    });
+  });
+  list.hidden = false;
+  select(tabs[0].id.slice(4));
+})();
+</script>
 </body>
 </html>

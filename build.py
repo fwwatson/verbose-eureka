@@ -15,6 +15,12 @@ Renders 58 project entries as image-anchored rows (square image left + text
 right; no bordered card). Year-grouped, calendar-ordered within year, no
 filter/search/sort/tag-grouping anywhere in the served HTML (methodology gate).
 
+YEAR TABS (2026-09-29, Francesca): one year per tab (older short years paired,
+max 12 projects per tab) so the page height stays ~2,700 px and the fixed iframe
+height in lesson 75598614 does not change month to month. The build prints a
+WARNING if any tab exceeds 12 projects -- only then re-measure the height.
+Without JavaScript every year still shows as one long list.
+
 # Image discovery
 
 For each project, glob `images/<NNN>-*` where <NNN> is the 3-digit zero-padded
@@ -304,6 +310,40 @@ def render_entry(p: dict, images_dir: Path) -> str:
     )
 
 
+
+# --- Year tabs (Francesca 2026-09-29) ------------------------------------
+# One year per tab so the page height stays roughly constant and the fixed
+# iframe height in Thinkific lesson 75598614 never has to change monthly.
+# A tab holds at most MAX_PER_TAB projects (a full year of monthly projects).
+# The newest year always stands alone (it is still filling). Older years are
+# paired newest-first while the pair stays within MAX_PER_TAB
+# (today: 2022+2023 = 12 -> one "2022–2023" tab; 2021 alone).
+MAX_PER_TAB = 12
+
+
+def group_year_tabs(by_year: dict) -> list:
+    years = list(by_year)  # newest first
+    tabs = []
+    i = 0
+    while i < len(years):
+        group = [years[i]]
+        if i > 0:  # never merge the current (newest) year
+            while (i + len(group) < len(years)
+                   and sum(len(by_year[y]) for y in group) + len(by_year[years[i + len(group)]]) <= MAX_PER_TAB):
+                group.append(years[i + len(group)])
+        if len(group) == 1:
+            tabs.append((group[0], group[0], group))
+        else:
+            tabs.append((f"{group[-1]}-{group[0]}", f"{group[-1]}\u2013{group[0]}", group))
+        i += len(group)
+    over = [(t[1], sum(len(by_year[y]) for y in t[2])) for t in tabs
+            if sum(len(by_year[y]) for y in t[2]) > MAX_PER_TAB]
+    if over:
+        print("WARNING — TAB OVER 12 PROJECTS, the Thinkific lesson 75598614 iframe "
+              f"height must be re-measured and raised: {over}", file=sys.stderr)
+    return tabs
+
+
 def render_body_inner(projects: list[dict], images_dir: Path) -> str:
     # Reverse-chronological: most recent first (Francesca 2026-06-24).
     # Years descending; months descending within a year; num breaks ties.
@@ -323,19 +363,43 @@ def render_body_inner(projects: list[dict], images_dir: Path) -> str:
     for p in sorted_projects:
         by_year.setdefault(p["year"], []).append(p)
 
-    sections = []
-    for year in by_year:  # insertion order = years descending (newest first)
-        items = "\n".join(render_entry(p, images_dir) for p in by_year[year])
-        sections.append(
-            f'<section class="year">\n'
-            f'  <h2 class="year-heading">{year}</h2>\n'
-            f'  <ul class="entries">\n{items}\n  </ul>\n'
-            f'</section>'
+    tabs = group_year_tabs(by_year)
+    tab_buttons, panels = [], []
+    for i, (key, label, years) in enumerate(tabs):
+        n = sum(len(by_year[y]) for y in years)
+        selected = "true" if i == 0 else "false"
+        tab_buttons.append(
+            f'<button type="button" role="tab" id="tab-{key}" class="ytab" '
+            f'aria-selected="{selected}" aria-controls="panel-{key}" tabindex="{0 if i == 0 else -1}">'
+            f'<span class="ytab-year">{html.escape(label)}</span>'
+            f'<span class="ytab-count">{n} project{"" if n == 1 else "s"}</span></button>'
         )
+        items = []
+        for y in years:
+            if len(years) > 1:
+                items.append(f'<li class="entry sub-year"><h3 class="sub-year-heading">{y}</h3></li>')
+            items.extend(render_entry(p, images_dir) for p in by_year[y])
+        newer = tabs[i - 1] if i > 0 else None
+        older = tabs[i + 1] if i + 1 < len(tabs) else None
+        nav = '<nav class="ynav" aria-label="Other years">'
+        nav += (f'<button type="button" class="ynav-btn" data-go="{newer[0]}">&larr; Newer: {html.escape(newer[1])}</button>'
+                if newer else '<span></span>')
+        nav += (f'<button type="button" class="ynav-btn" data-go="{older[0]}">Older: {html.escape(older[1])} &rarr;</button>'
+                if older else '<span></span>')
+        nav += '</nav>'
+        # Panels are NOT hidden in the served HTML: if the script fails, every
+        # year still shows (the old one-long-list behaviour). The script hides
+        # all but the selected tab.
+        panels.append(
+            f'<section class="year" role="tabpanel" id="panel-{key}" aria-labelledby="tab-{key}">\n'
+            f'  <h2 class="year-heading nojs-only">{html.escape(label)}</h2>\n'
+            f'  <ul class="entries">\n' + "\n".join(items) + f'\n  </ul>\n  {nav}\n</section>'
+        )
+    tablist = '<div class="ytabs" role="tablist" aria-label="Year" hidden>' + "".join(tab_buttons) + '</div>'
+    return tablist + "\n\n" + "\n\n".join(panels)
 
     # Intro paragraph intentionally removed 2026-05-31 — Francesca writes the
     # opening paragraph at the Thinkific lesson level, above the iframe.
-    return "\n\n".join(sections)
 
 
 # Stylesheet. Image-anchored row pattern; placeholder uses brand-palette
@@ -408,6 +472,68 @@ body { font-family: Georgia, 'Times New Roman', serif;
 /* Refined Classic font roles (Sam 2026-06-24) */
 .year-heading, .entry-title, .placeholder-title { font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; }
 .entry-date-runtime, .entry-format, .entry-led-by, .entry-multipart-links, .placeholder-label { font-family: 'Trebuchet MS', Verdana, Geneva, sans-serif; }
+
+/* Year tabs (2026-09-29) */
+.year { margin-bottom: 0; }
+.ytabs { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid #ddd; margin-bottom: 8px; }
+.ytab { font: inherit; display: grid; justify-items: center; gap: 1px; min-width: 76px; min-height: 48px; padding: 6px 12px; border: 1px solid #d6dcdc; border-radius: 6px; background: #fff; color: #1a1a1a; cursor: pointer; }
+.ytab-year { font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; font-size: 18px; font-weight: 600; line-height: 1.2; }
+.ytab-count { font-family: 'Trebuchet MS', Verdana, Geneva, sans-serif; font-size: 11px; color: #666; }
+.ytab:hover { border-color: #0a5d8c; }
+.ytab[aria-selected="true"] { background: #273e69; border-color: #273e69; color: #fff; }
+.ytab[aria-selected="true"] .ytab-count { color: #d7deea; }
+.ytab:focus-visible, .ynav-btn:focus-visible { outline: 2px solid #f26a36; outline-offset: 2px; }
+.entry.sub-year { padding: 14px 0 2px; border-bottom: none; }
+.entries .entry.sub-year:first-child { padding-top: 4px; }
+.sub-year-heading { margin: 0; font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif; font-size: 16px; font-weight: 600; color: #555; letter-spacing: 0.02em; }
+.ynav { display: flex; justify-content: space-between; gap: 8px; padding-top: 14px; margin-top: 4px; border-top: 1px solid #f0f0f0; }
+.ynav-btn { font: 14px 'Trebuchet MS', Verdana, Geneva, sans-serif; min-height: 44px; padding: 8px 14px; border: 1px solid #d6dcdc; border-radius: 6px; background: #fff; color: #0a5d8c; cursor: pointer; }
+.ynav-btn:hover { border-color: #0a5d8c; }
+.js .nojs-only { display: none; }
+html:not(.js) .ynav { display: none; }
+[hidden] { display: none !important; }
+@media (max-width: 600px) {
+  .ytabs { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .ytab { min-width: 0; padding: 6px 4px; }
+}
+""".strip()
+
+
+TABS_JS = """
+(function () {
+  document.documentElement.className += ' js';
+  var list = document.querySelector('.ytabs');
+  if (!list) return;
+  var tabs = Array.prototype.slice.call(list.querySelectorAll('.ytab'));
+  function select(key, focus) {
+    tabs.forEach(function (t) {
+      var on = t.id === 'tab-' + key;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) t.focus();
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t.id.slice(4)); });
+    t.addEventListener('keydown', function (e) {
+      var j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+      if (e.key === 'Home') j = 0;
+      if (e.key === 'End') j = tabs.length - 1;
+      if (j !== null) { e.preventDefault(); select(tabs[j].id.slice(4), true); }
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.ynav-btn'), function (b) {
+    b.addEventListener('click', function () {
+      select(b.getAttribute('data-go'), true);
+      try { list.scrollIntoView({ block: 'start' }); } catch (e) { list.scrollIntoView(); }
+    });
+  });
+  list.hidden = false;
+  select(tabs[0].id.slice(4));
+})();
 """.strip()
 
 
@@ -425,6 +551,9 @@ def render_html(body_inner: str) -> str:
 </head>
 <body>
 {body_inner}
+<script>
+{TABS_JS}
+</script>
 </body>
 </html>
 """
