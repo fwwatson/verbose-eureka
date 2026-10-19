@@ -345,10 +345,16 @@
             // Vimeo's SDK now holds a seek promise on a paused player until playback starts, so
             // play() must NOT wait on the seek (Rex/Sam 2026-10-18). Issue both together; the seek
             // is still one discrete setCurrentTime (freeze-safe), and each failure is reported separately.
+            // The SDK's play() never resolves on a player that is already playing, so the "now playing"
+            // line is shown when EITHER the seek or the play resolves (first one wins; same text), and only
+            // if this is still the latest click.
             var seekFailed = false;
-            player.setCurrentTime(r.ts).catch(function (e) { seekFailed = true; reportPlayErr(r, e); });
+            var announce = function () {
+              if (!seekFailed && currentRec === r) { setNow('<b>' + esc(r.project) + '</b> — ' + esc(r.title) + ' · ' + fmt(r.ts)); }
+            };
+            player.setCurrentTime(r.ts).then(announce, function (e) { seekFailed = true; reportPlayErr(r, e); });
             return player.play()
-              .then(function () { if (!seekFailed) { setNow('<b>' + esc(r.project) + '</b> — ' + esc(r.title) + ' · ' + fmt(r.ts)); } })
+              .then(announce)
               .catch(function (e) { reportPlayErr(r, e); });
           };
           if (r.vid !== currentVideo) {
