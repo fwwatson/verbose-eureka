@@ -342,9 +342,13 @@
           var phEl = document.getElementById("os-ph"); if (phEl) { phEl.style.display = "none"; }
           setNow("Loading " + r.project + " — " + r.title + " @ " + fmt(r.ts) + "…");
           var seekAndPlay = function () {
-            return player.setCurrentTime(r.ts)
-              .then(function () { return player.play(); })
-              .then(function () { setNow('<b>' + esc(r.project) + '</b> — ' + esc(r.title) + ' · ' + fmt(r.ts)); })
+            // Vimeo's SDK now holds a seek promise on a paused player until playback starts, so
+            // play() must NOT wait on the seek (Rex/Sam 2026-10-18). Issue both together; the seek
+            // is still one discrete setCurrentTime (freeze-safe), and each failure is reported separately.
+            var seekFailed = false;
+            player.setCurrentTime(r.ts).catch(function (e) { seekFailed = true; reportPlayErr(r, e); });
+            return player.play()
+              .then(function () { if (!seekFailed) { setNow('<b>' + esc(r.project) + '</b> — ' + esc(r.title) + ' · ' + fmt(r.ts)); } })
               .catch(function (e) { reportPlayErr(r, e); });
           };
           if (r.vid !== currentVideo) {
